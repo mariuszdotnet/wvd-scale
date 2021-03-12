@@ -14,14 +14,17 @@ parameters:
   displayName: 'Use experimental build process?'
   type: boolean
   default: false
-  
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- task: AzureFunction@1
-  inputs:
-    function: 'https://wvd-scale.azurewebsites.net/api/DeploymentRequestProcess'
-    key: 'ZydqcxEKwcP2fxf84d8PIt/PC0CaDquUcpL1bEC58u/PY3jf254mGw=='
-    method: 'POST'
-    waitForCompletion: 'false'
+jobs:
+- job: 'CallFunction'
+  pool: server
+  steps:
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'
+
+  - task: AzureFunction@1
+    inputs:
+      function: 'https://wvd-scale.azurewebsites.net/api/DeploymentRequestProcess'
+      key: 'ZydqcxEKwcP2fxf84d8PIt/PC0CaDquUcpL1bEC58u/PY3jf254mGw=='
+      method: 'POST'
+      waitForCompletion: 'false'
