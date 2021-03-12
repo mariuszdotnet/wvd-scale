@@ -4,22 +4,28 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+- none
 
 pool:
   vmImage: ubuntu-latest
 
 parameters:
-- name: experimentalTemplate
-  displayName: 'Use experimental build process?'
-  type: boolean
-  default: false
-  
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- name: name
+  displayName: 'name:'
+  type: string
+  default: 
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+jobs:
+- job: 'CallFunction'
+  pool: server
+  steps:
+  - task: AzureFunction@1
+    inputs:
+      function: 'https://wvd-scale.azurewebsites.net/api/DeploymentRequestProcess'
+      key: '$(functionKey)'
+      method: 'POST'
+      body: |
+        {
+        "name":"${{ parameters.name }}"
+        }
+      waitForCompletion: 'false'
