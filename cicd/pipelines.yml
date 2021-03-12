@@ -13,7 +13,7 @@ parameters:
 - name: name
   displayName: 'name:'
   type: string
-  default: false
+  default: 
 
 jobs:
 - job: 'CallFunction'
