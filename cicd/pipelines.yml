@@ -22,6 +22,6 @@ steps:
 - task: AzureFunction@1
   inputs:
     function: 'https://wvd-scale.azurewebsites.net/api/DeploymentRequestProcess'
+    key: 'ZydqcxEKwcP2fxf84d8PIt/PC0CaDquUcpL1bEC58u/PY3jf254mGw=='
     method: 'POST'
-    key: 
     waitForCompletion: 'false'
