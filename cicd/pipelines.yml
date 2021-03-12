@@ -10,9 +10,9 @@ pool:
   vmImage: ubuntu-latest
 
 parameters:
-- name: experimentalTemplate
-  displayName: 'Use experimental build process?'
-  type: boolean
+- name: name
+  displayName: 'name:'
+  type: string
   default: false
 
 jobs:
@@ -26,6 +26,6 @@ jobs:
       method: 'POST'
       body: |
         {
-        "name":"mariusz"
+        "name":"${{ parameters.image }}"
         }
       waitForCompletion: 'false'
