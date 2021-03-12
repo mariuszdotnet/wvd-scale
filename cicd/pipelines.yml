@@ -26,6 +26,6 @@ jobs:
       method: 'POST'
       body: |
         {
-        "name":"${{ parameters.image }}"
+        "name":${{ parameters.image }}
         }
       waitForCompletion: 'false'
