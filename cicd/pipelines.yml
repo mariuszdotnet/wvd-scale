@@ -19,9 +19,6 @@ jobs:
 - job: 'CallFunction'
   pool: server
   steps:
-  - script: echo Hello, world!
-    displayName: 'Run a one-line script'
-
   - task: AzureFunction@1
     inputs:
       function: 'https://wvd-scale.azurewebsites.net/api/DeploymentRequestProcess'
