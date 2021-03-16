@@ -26,6 +26,7 @@ jobs:
       method: 'POST'
       body: |
         {
-          "name":"${{ parameters.name }}"
+        "name":"${{ parameters.name }}",
+        "sessionId": "123456789"
         }
       waitForCompletion: 'false'
