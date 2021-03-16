@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.WebJobs.Extensions.Storage;
 using Newtonsoft.Json;
+using Azure.Messaging.ServiceBus;
 
 namespace MK.WVD
 {
@@ -27,7 +28,6 @@ namespace MK.WVD
          ILogger log)
         {
             dynamic data = JsonConvert.DeserializeObject(myQueueItem);
-
             WvdRequest myWvdRequest = new WvdRequest{
                 PartitionKey = data?.name,
                 RowKey = Guid.NewGuid().ToString(),
@@ -36,6 +36,16 @@ namespace MK.WVD
                 wvdPool = data?.wvdPool,
                 number = data?.number
             };
+
+            // Send message to ServiceBus
+            ServiceBusClient client = new ServiceBusClient(System.Environment.GetEnvironmentVariable("ServiceBusConnection"));
+            string queueName = "wvd-response-session";
+            ServiceBusSender sender = client.CreateSender(queueName);
+            ServiceBusMessage message = new ServiceBusMessage(JsonConvert.SerializeObject(myWvdRequest));
+            message.SessionId = myWvdRequest.sessionId;
+            sender.SendMessageAsync(message);
+    
+            log.LogInformation("Message sent to service bus.");
 
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
             return myWvdRequest;
