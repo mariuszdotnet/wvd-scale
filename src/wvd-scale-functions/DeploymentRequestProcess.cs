@@ -12,42 +12,35 @@ namespace MK.WVD
 {
     public static class DeploymentRequestProcess
     {
-        //static string connectionString = "";
-        static string queueName = "wvd-request-session";
-
         [FunctionName("DeploymentRequestProcess")]
-        //[return: ServiceBus("myqueue", Connection = "ServiceBusConnection")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string name = req.Query["name"];
-
+            string sessionId = null;
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            sessionId = sessionId ?? data?.sessionId;
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            await using (ServiceBusClient client = new ServiceBusClient(System.Environment.GetEnvironmentVariable("ServiceBusConnection")))
+            if (string.IsNullOrEmpty(sessionId))
             {
-                // create a sender for the queue
-                ServiceBusSender sender = client.CreateSender(queueName);
-
-                // create a message that we can send
-                ServiceBusMessage message = new ServiceBusMessage("Hello world!");
-                //message.MessageId = "supermario";
-                message.SessionId = "1";
-
-                // send the message
-                await sender.SendMessageAsync(message);
+                log.LogInformation("Messgae not sent to service bus.");
             }
-
-            return new OkObjectResult(responseMessage);
+            else 
+            {
+                // Send message to ServiceBus
+                await using (ServiceBusClient client = new ServiceBusClient(System.Environment.GetEnvironmentVariable("ServiceBusConnection")))
+                {
+                    string queueName = "wvd-request-session";
+                    ServiceBusSender sender = client.CreateSender(queueName);
+                    ServiceBusMessage message = new ServiceBusMessage(requestBody);
+                    message.SessionId = sessionId;
+                    await sender.SendMessageAsync(message);
+                }
+                log.LogInformation("Message sent to service bus.");
+            }
+            return new OkObjectResult(requestBody);
         }
     }
 }
