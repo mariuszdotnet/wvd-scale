@@ -27,8 +27,5 @@ jobs:
       body: |
         {
           "name":"${{ parameters.name }}"
-          "sessionId": "123456789",
-          "wvdPool": "windows",   
-          "number": 100
         }
       waitForCompletion: 'false'
