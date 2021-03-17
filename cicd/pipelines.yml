@@ -58,8 +58,11 @@ jobs:
       script: |
         # Write your PowerShell commands here.
         $url = "https://wvd-scale.azurewebsites.net/api/DeplymentStartProcess?code=$(functionKey2)"
-        $url2 = "http://numbersapi.com/random?min=10&max=20"
-        # Write-Host "Hello World ${{ parameters.sessionId }}"
-        #Invoke-RestMethod $url
         $Body = @{sessionId = "${{ parameters.sessionId }}"}
-        $Body | ConvertTo-Json
+        $Parameters = @{
+          Method = "POST"
+          Uri =  $url
+          Body = ($Body | ConvertTo-Json) 
+          ContentType = "application/json"
+        }
+        Invoke-RestMethod @Parameters
