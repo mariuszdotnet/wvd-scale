@@ -20,7 +20,8 @@ parameters:
   default: '123456789'
 
 jobs:
-- job: 'CallFunction'
+- job: 'DeploymentRequestProcess'
+  displayName: 'Deployment Request Process'
   pool: server
   steps:
   - task: AzureFunction@1
@@ -37,14 +38,23 @@ jobs:
         "number": 100
         }
       waitForCompletion: 'false'
-  - task: AzureFunction@1
-    displayName: Deployment Start Process
+
+- job: 'DeploymentStartProcess'
+  displayName: 'Deployment Start Process'
+  steps:
+  - task: PowerShell@2
     inputs:
-      function: 'https://wvd-scale.azurewebsites.net/api/DeplymentStartProcess'
-      key: '$(functionKey2)'
-      method: 'POST'
-      body: |
-        {
-        "sessionId": "${{ parameters.sessionId }}"
+      targetType: 'inline'
+      script: |
+        # Write your PowerShell commands here.
+        $url = "https://wvd-scale.azurewebsites.net/api/DeplymentStartProcess?code=$(functionKey2)"
+        $Body = @{sessionId = "${{ parameters.sessionId }}"}
+        $Parameters = @{
+          Method = "POST"
+          Uri =  $url
+          Body = ($Body | ConvertTo-Json) 
+          ContentType = "application/json"
         }
-      waitForCompletion: 'false'
+        Invoke-RestMethod @Parameters
+        # Set response to a variable
+        # https://gaunacode.com/passing-variables-between-jobs-for-azure-devops-pipelines
