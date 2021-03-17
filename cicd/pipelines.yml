@@ -60,4 +60,4 @@ jobs:
         $url = "https://wvd-scale.azurewebsites.net/api/DeplymentStartProcess?code=$(functionKey2)"
         $url2 = "http://numbersapi.com/random?min=10&max=20"
         # Write-Host "Hello World ${{ parameters.sessionId }}"
-        Invoke-RestMethod $url2
+        Invoke-RestMethod $url
