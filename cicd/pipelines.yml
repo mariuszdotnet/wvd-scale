@@ -43,5 +43,5 @@ jobs:
       function: 'https://wvd-scale.azurewebsites.net/api/DeplymentStartProcess'
       key: '$(functionKey2)'
       method: 'POST'
-      body: 'tbd'
+      body: ''
       waitForCompletion: 'false'
