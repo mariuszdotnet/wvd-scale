@@ -37,14 +37,14 @@ jobs:
         "number": 100
         }
       waitForCompletion: 'false'
-  - task: AzureFunction@1
-    displayName: Deployment Start Process
-    inputs:
-      function: 'https://wvd-scale.azurewebsites.net/api/DeplymentStartProcess'
-      key: '$(functionKey2)'
-      method: 'POST'
-      body: |
-        {
-        "sessionId": "${{ parameters.sessionId }}"
-        }
-      waitForCompletion: 'false'
+  # - task: AzureFunction@1
+  #   displayName: Deployment Start Process
+  #   inputs:
+  #     function: 'https://wvd-scale.azurewebsites.net/api/DeplymentStartProcess'
+  #     key: '$(functionKey2)'
+  #     method: 'POST'
+  #     body: |
+  #       {
+  #       "sessionId": "${{ parameters.sessionId }}"
+  #       }
+  #     waitForCompletion: 'false'
