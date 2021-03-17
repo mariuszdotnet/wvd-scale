@@ -13,13 +13,18 @@ parameters:
 - name: name
   displayName: 'name:'
   type: string
-  default: 
+  default: 'Mariusz'
+- name: sessionId
+  displayName:  'sessionId:'
+  type: string
+  default: '123456789'
 
 jobs:
 - job: 'CallFunction'
   pool: server
   steps:
   - task: AzureFunction@1
+    displayName: Deployment Request Process
     inputs:
       function: 'https://wvd-scale.azurewebsites.net/api/DeploymentRequestProcess'
       key: '$(functionKey)'
@@ -27,8 +32,16 @@ jobs:
       body: |
         {
         "name":"${{ parameters.name }}",
-        "sessionId": "123456789",
+        "sessionId": "${{ parameters.sessionId }}",
         "wvdPool": "windows",
         "number": 100
         }
+      waitForCompletion: 'false'
+  - task: AzureFunction@1
+    displayName: Deployment Start Process
+    inputs:
+      function: 'https://wvd-scale.azurewebsites.net/api/DeplymentStartProcess'
+      key: '$(functionKey2)'
+      method: 'POST'
+      body: 'tbd'
       waitForCompletion: 'false'
