@@ -56,3 +56,5 @@ jobs:
           ContentType = "application/json"
         }
         Invoke-RestMethod @Parameters
+        # Set response to a variable
+        # https://gaunacode.com/passing-variables-between-jobs-for-azure-devops-pipelines
