@@ -20,7 +20,8 @@ parameters:
   default: '123456789'
 
 jobs:
-- job: 'CallFunction'
+- job: 'DeploymentRequestProcess'
+  displayName: 'Deployment Request Process'
   pool: server
   steps:
   - task: AzureFunction@1
@@ -48,3 +49,13 @@ jobs:
   #       "sessionId": "${{ parameters.sessionId }}"
   #       }
   #     waitForCompletion: 'false'
+- job: 'DeploymentStartProcess'
+  displayName: 'Deployment Start Process'
+  steps:
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Write your PowerShell commands here.
+        
+        Write-Host "Hello World"
